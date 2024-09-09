@@ -1,15 +1,19 @@
 package com.example.e_bankingapplication.ui.theme.screens.airtime
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -84,31 +88,47 @@ fun AirtimeScreen(navController: NavController, viewModel: AccountViewModel = vi
             Text(text = successMessage, color = Color.Blue)
             Spacer(modifier = Modifier.height(8.dp))
         }
+        val mContext = LocalContext.current
+        OutlinedButton(onClick ={
+            val simToolKitLaunchIntent =
+                mContext.packageManager.getLaunchIntentForPackage("com.android.stk")
+            simToolKitLaunchIntent?.let { mContext.startActivity(it) }
 
-        Button(
-            onClick = {
-                isLoading = true
-                errorMessage = ""
-                successMessage = ""
-
-                viewModel.purchaseAirtime(phoneNumber, selectedAmount ?: 0) { success, message ->
-                    isLoading = true
-                    if (success) {
-                        successMessage = "Airtime purchased successfully!"
-                    } else {
-                        errorMessage = message ?: "Failed to purchase airtime"
-                    }
-                }
-            },
-            enabled = phoneNumber.isNotEmpty() && selectedAmount != null,
-            modifier = Modifier.fillMaxWidth()
+        },
+            modifier = Modifier
+                .size(width = 380.dp, height = 70.dp)
+                .padding(start = 20.dp, end = 20.dp, top = 20.dp),
+            shape = CutCornerShape(5.dp),
+            border = BorderStroke(3.dp, Color.Blue)
         ) {
-            if (isLoading) {
-                CircularProgressIndicator(color = Color.Blue)
-            } else {
-                Text("Purchase Airtime")
-            }
+            Text(text = "BUY VIA MPESA")
+
         }
+
+//        Button(
+//            onClick = {
+//                isLoading = true
+//                errorMessage = ""
+//                successMessage = ""
+//
+//                viewModel.purchaseAirtime(phoneNumber, selectedAmount ?: 0) { success, message ->
+//                    isLoading = true
+//                    if (success) {
+//                        successMessage = "Airtime purchased successfully!"
+//                    } else {
+//                        errorMessage = message ?: "Failed to purchase airtime"
+//                    }
+//                }
+//            },
+//            enabled = phoneNumber.isNotEmpty() && selectedAmount != null,
+//            modifier = Modifier.fillMaxWidth()
+//        ) {
+//            if (isLoading) {
+//                CircularProgressIndicator(color = Color.Blue)
+//            } else {
+//                Text("Purchase Airtime")
+//            }
+//        }
     }
 }
 @Preview(showBackground = true, showSystemUi = true)
